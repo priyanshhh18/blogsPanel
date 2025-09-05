@@ -1,7 +1,7 @@
 // src/components/BlogsPage/BlogHorizontalCarousel.js
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "../../styles/BlogPage/Components/BlogHorizontalCarousel.module.css";
@@ -17,7 +17,7 @@ const BlogHorizontalCarousel = ({ blogs, title }) => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const autoPlayRef = useRef(null);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (isTransitioning) return;
 
     setIsTransitioning(true);
@@ -25,10 +25,12 @@ const BlogHorizontalCarousel = ({ blogs, title }) => {
       prevIndex === blogs.length - 1 ? 0 : prevIndex + 1
     );
 
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setIsTransitioning(false);
     }, 500);
-  };
+
+    return () => clearTimeout(timer);
+  }, [isTransitioning, blogs.length]);
 
   const handlePrev = () => {
     if (isTransitioning) return;
@@ -43,7 +45,7 @@ const BlogHorizontalCarousel = ({ blogs, title }) => {
     }, 500);
   };
 
-  // Reset autoplay when currentIndex changes
+  // Handle autoplay
   useEffect(() => {
     if (autoPlayRef.current) {
       clearInterval(autoPlayRef.current);
@@ -60,7 +62,7 @@ const BlogHorizontalCarousel = ({ blogs, title }) => {
         clearInterval(autoPlayRef.current);
       }
     };
-  }, [currentIndex, blogs.length]);
+  }, [currentIndex, blogs.length, handleNext]);
 
   // Handle touch events for mobile swipe
   const handleTouchStart = (e) => {

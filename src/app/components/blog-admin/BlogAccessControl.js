@@ -251,37 +251,31 @@ const BlogAccessLoading = () => (
 const BlogAccessControl = ({ 
   children, 
   requiredPermission,
-  resourceOwnerId = null, // For ownership-based permissions
-  validateWithBackend = true, // Whether to validate with backend
+  resourceOwnerId = null,
+  validateWithBackend = true,
   fallback = null,
   showLoading = true
 }) => {
-  // ✅ Enhanced error boundary for useAuth hook
+  // State and hooks at the top level
   const [contextError, setContextError] = useState(null);
   const [hasAccess, setHasAccess] = useState(false);
   const [isValidating, setIsValidating] = useState(true);
   const [validationError, setValidationError] = useState(null);
   const router = useRouter();
+  const authContext = useAuth();
   
-  let user, loading, isAuthenticated;
-  
-  try {
-    const authContext = useAuth();
-    if (!authContext) {
-      throw new Error('AuthContext not available');
-    }
-    user = authContext.user;
-    loading = authContext.loading;
-    isAuthenticated = authContext.isAuthenticated;
-  } catch (error) {
-    console.error('BlogAccessControl: AuthContext error:', error);
-    setContextError(error.message);
-  }
-
   // API Configuration
   const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5002';
 
-  const checkAccess = async () => {
+  // Memoize the checkAccess function with all its dependencies
+  const checkAccess = useCallback(async () => {
+    if (!authContext) {
+      setContextError('AuthContext not available');
+      return;
+    }
+
+    const { user, loading, isAuthenticated } = authContext;
+    
     try {
       setIsValidating(true);
       setValidationError(null);
@@ -316,32 +310,28 @@ const BlogAccessControl = ({
       console.log('BlogAccessControl: Permission check', {
         userRole,
         requiredPermission,
-        userId: user.id,
+        userId: user?.id,
         resourceOwnerId,
         validateWithBackend
       });
 
-      // ✅ Enhanced permission checking with better ownership handling
+      // Enhanced permission checking with better ownership handling
       const hasLocalPermission = hasBlogPermission(
         requiredPermission, 
         userRole, 
-        user.id, 
+        user?.id, 
         resourceOwnerId
       );
 
       if (!hasLocalPermission) {
         console.log('BlogAccessControl: Local permission check failed');
         
-        // ✅ Check if this is an ownership issue
-        const isOwnershipIssue = requiredPermission.includes(':own') && 
+        // Check if this is an ownership issue
+        const isOwnershipIssue = requiredPermission?.includes(':own') && 
                                 resourceOwnerId && 
-                                user.id.toString() !== resourceOwnerId.toString();
+                                user?.id?.toString() !== resourceOwnerId?.toString();
         
-        if (isOwnershipIssue) {
-          setValidationError('ownership_required');
-        } else {
-          setValidationError('insufficient_permissions');
-        }
+        setValidationError(isOwnershipIssue ? 'ownership_required' : 'insufficient_permissions');
         return;
       }
 
@@ -413,13 +403,15 @@ const BlogAccessControl = ({
     } finally {
       setIsValidating(false);
     }
-  };
+  }, [user, isAuthenticated, requiredPermission, resourceOwnerId, validateWithBackend, authContext, API_BASE_URL, contextError]);
 
   useEffect(() => {
-    checkAccess();
-  }, [user, loading, requiredPermission, resourceOwnerId, validateWithBackend, contextError]);
+    if (authContext) {
+      checkAccess();
+    }
+  }, [authContext, checkAccess]);
 
-  // ✅ Handle context errors
+  // Handle context errors
   if (contextError) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">

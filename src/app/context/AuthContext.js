@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 export const AuthContext = createContext({});
@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
   const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5002';
 
   // Single, resilient logout routine used by logout() and by other pages if needed
-  const handleLogout = async (hardRedirect = true) => {
+  const handleLogout = useCallback(async (hardRedirect = true) => {
     try {
       const token = typeof window !== 'undefined' ? localStorage.getItem('adminToken') : null;
 
@@ -49,12 +49,12 @@ export const AuthProvider = ({ children }) => {
       if (hardRedirect) {
         // Hard redirect with history replacement so Back can't return here
         window.location.replace('/AdminLogin?logout=1'); // replaces current entry in history [2][1][11]
-      } else {
+      } else if (router) {
         // SPA navigation fallback (doesn't force full reload)
         router.replace('/AdminLogin?logout=1');
       }
     }
-  };
+  }, [API_BASE_URL, router]); // Add router to dependencies since it's used in the function
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -112,7 +112,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     checkAuth();
-  }, [API_BASE_URL]); // re-run if backend URL changes
+  }, [API_BASE_URL, handleLogout]); // Include handleLogout in dependencies
 
   const login = (userData) => {
     // Normalize role to lowercase

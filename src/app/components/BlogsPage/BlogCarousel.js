@@ -1,7 +1,7 @@
 // src/components/BlogsPage/BlogCarousel.js
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "../../styles/BlogPage/Components/BlogCarousel.module.css";
@@ -18,12 +18,12 @@ const BlogCarousel = ({ blogs, title }) => {
   const autoPlayRef = useRef(null);
   const visibleSlides = 3;
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setCurrentIndex(
       (prevIndex) =>
         (prevIndex + 1) % Math.max(blogs.length - (visibleSlides - 1), 1)
     );
-  };
+  }, [blogs.length, visibleSlides]);
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) =>
@@ -33,7 +33,7 @@ const BlogCarousel = ({ blogs, title }) => {
     );
   };
 
-  // Reset autoplay when currentIndex changes
+  // Handle autoplay
   useEffect(() => {
     if (autoPlayRef.current) {
       clearInterval(autoPlayRef.current);
@@ -50,7 +50,7 @@ const BlogCarousel = ({ blogs, title }) => {
         clearInterval(autoPlayRef.current);
       }
     };
-  }, [currentIndex, blogs.length]);
+  }, [currentIndex, blogs.length, visibleSlides, handleNext]);
 
   // Handle touch events for mobile swipe
   const handleTouchStart = (e) => {
