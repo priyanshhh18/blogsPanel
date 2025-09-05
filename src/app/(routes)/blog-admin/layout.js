@@ -379,7 +379,7 @@ const BlogAdminLayout = ({ children }) => {
                   {/* Quick Actions */}
                   <div className="flex items-center space-x-2">
                     <a
-                      href="/blogs"
+                      href="https://connectingdotserp.com/blogs"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors"

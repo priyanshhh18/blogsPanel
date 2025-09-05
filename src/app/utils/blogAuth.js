@@ -435,8 +435,7 @@ const blogAuth = {
 
 // Export all utilities as named exports
 export {
-  // BLOG_ROLES, ROLE_PERMISSIONS, BLOG_PERMISSIONS, and hasBlogPermission are already exported at the top of the file
-  getCurrentBlogRole,
+  // BLOG_ROLES, ROLE_PERMISSIONS, BLOG_PERMISSIONS, hasBlogPermission, and getCurrentBlogRole are already exported at the top of the file
   isBlogAdminAuthenticated,
   validateBlogAccessWithBackend,
   useBlogPermission,
