@@ -1,41 +1,30 @@
-// src/app/(routes)/blogs/[category]/page.js
 "use client";
  
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useParams } from "next/navigation";
-import styles from "@/styles/BlogPage/CategoryPage.module.css";
-import Card from "@/components/BlogsPage/ui/Card"; // Make sure this component is updated
-import Breadcrumb from "@/components/BlogsPage/Breadcrumb";
+import styles from "@/app/styles/BlogPage/Components/CategoryFilter.module.css";
+import Breadcrumb from "@/app/components/BlogsPage/Breadcrumb";
+import BlogCard from '@/app/components/BlogsPage/BlogCard';
  
-// CHANGED: Use process.env.NEXT_PUBLIC_API_URL_BLOG
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL_BLOG;
  
 const CategoryPage = () => {
   const { category } = useParams() || {};
   const [blogs, setBlogs] = useState([]);
-  const [subcategories, setSubcategories] = useState([]);
+  const [subcategories, setSubcategories] = useState(["All"]);
   const [selectedSubcategory, setSelectedSubcategory] = useState("All");
-  const [loading, setLoading] = useState(true); // Loading state
- 
-  useEffect(() => {
-    if (category) {
-      fetchAllSubcategories();
-      fetchBlogs();
-    }
-  }, [category, selectedSubcategory]);
- 
-  const fetchAllSubcategories = async () => {
+  const [loading, setLoading] = useState(true);
+
+  // Memoize the fetchAllSubcategories function
+  const fetchAllSubcategories = useCallback(async () => {
+    if (!category) return;
+    
     try {
-      // CHANGED: Use API_BASE_URL
       const response = await fetch(
         `${API_BASE_URL}/api/blogs?category=${encodeURIComponent(category)}`
       );
-      const data = await response.json(); // Note: Your API currently returns { blogs: [], hasMore: bool }
- 
-      // Assuming your backend /api/blogs endpoint returns { blogs: Array, hasMore: Boolean }
-      // The old code assumed `data` was directly an array, which might be incorrect based on your blogsPanel.js.
-      // Adjusting to correctly extract `blogs` array.
-      const blogsData = Array.isArray(data.blogs) ? data.blogs : [];
+      const data = await response.json();
+      const blogsData = Array.isArray(data?.blogs) ? data.blogs : [];
  
       const uniqueSubcategories = [
         "All",
@@ -47,13 +36,16 @@ const CategoryPage = () => {
       setSubcategories(uniqueSubcategories);
     } catch (error) {
       console.error("Error fetching subcategories:", error);
+      setSubcategories(["All"]);
     }
-  };
+  }, [category]);
  
-  const fetchBlogs = async () => {
-    setLoading(true); // Start loading
+  // Memoize the fetchBlogs function
+  const fetchBlogs = useCallback(async () => {
+    if (!category) return;
+    
+    setLoading(true);
     try {
-      // CHANGED: Use API_BASE_URL
       let url = `${API_BASE_URL}/api/blogs?category=${encodeURIComponent(category)}`;
  
       if (selectedSubcategory.toLowerCase() !== "all") {
@@ -61,20 +53,28 @@ const CategoryPage = () => {
       }
  
       const response = await fetch(url);
-      const data = await response.json(); // Note: Your API currently returns { blogs: [], hasMore: bool }
+      const data = await response.json();
  
-      if (!response.ok || !Array.isArray(data.blogs)) { // CHANGED: Check data.blogs for array
+      if (!response.ok || !Array.isArray(data?.blogs)) {
         throw new Error("Invalid response format");
       }
  
-      setBlogs(data.blogs); // CHANGED: Set blogs from data.blogs
+      setBlogs(data.blogs);
     } catch (error) {
       console.error("Error fetching blogs:", error);
       setBlogs([]);
     } finally {
-      setLoading(false); // End loading
+      setLoading(false);
     }
-  };
+  }, [category, selectedSubcategory]);
+
+  // Main effect to trigger data fetching
+  useEffect(() => {
+    if (category) {
+      fetchAllSubcategories();
+      fetchBlogs();
+    }
+  }, [category, selectedSubcategory, fetchAllSubcategories, fetchBlogs]);
  
   return (
     <div className="p-4">

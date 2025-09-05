@@ -412,7 +412,8 @@ export const BLOG_PERMISSIONS = {
   SETTINGS_EDIT: 'settings:edit'
 };
 
-export default {
+// Create blogAuth object with all utilities
+const blogAuth = {
   BLOG_ROLES,
   ROLE_PERMISSIONS,
   BLOG_PERMISSIONS,
@@ -428,5 +429,30 @@ export default {
   BlogPermissionWrapper,
   getRolePermissions,
   hasAdminPrivileges,
-  canAccessBlogAdmin
+  canAccessBlogAdmin,
+  testConnection
 };
+
+// Export all utilities as named exports
+export {
+  BLOG_ROLES,
+  ROLE_PERMISSIONS,
+  BLOG_PERMISSIONS,
+  hasBlogPermission,
+  getCurrentBlogRole,
+  isBlogAdminAuthenticated,
+  validateBlogAccessWithBackend,
+  useBlogPermission,
+  useBlogPermissions,
+  useCurrentBlogRole,
+  useBlogAdminAuth,
+  requireBlogAuth,
+  BlogPermissionWrapper,
+  getRolePermissions,
+  hasAdminPrivileges,
+  canAccessBlogAdmin,
+  testConnection
+};
+
+// Also export as default for backward compatibility
+export default blogAuth;

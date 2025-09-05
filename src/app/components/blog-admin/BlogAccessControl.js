@@ -1,14 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from '@context/AuthContext';
 
-// Define blog admin roles and their permissions
-const BLOG_ROLES = {
-  SUPERADMIN: 'superadmin',
-  ADMIN: 'admin',
-  USER: 'user'
-};
+// Import BLOG_ROLES from blogAuth utility
+import { BLOG_ROLES } from '@utils/blogAuth';
 
 // ✅ Updated permissions - Users can now create, edit, and delete their own posts
 const ROLE_PERMISSIONS = {
@@ -480,26 +476,26 @@ const BlogAccessControl = ({
 
 // ✅ Safe hook for checking permissions with error handling
 const useBlogPermission = (requiredPermission, resourceOwnerId = null) => {
-  try {
-    const { user } = useAuth();
-    const userRole = getCurrentBlogRole(user);
-    
-    return hasBlogPermission(requiredPermission, userRole, user?.id, resourceOwnerId);
-  } catch (error) {
-    console.error('useBlogPermission error:', error);
-    return false; // Fail closed - deny permission if there's an error
-  }
+  const { user } = useAuth(); // This must be called at the top level
+  
+  return useMemo(() => {
+    try {
+      const userRole = getCurrentBlogRole(user);
+      return hasBlogPermission(requiredPermission, userRole, user?.id, resourceOwnerId);
+    } catch (error) {
+      console.error('useBlogPermission error:', error);
+      return false; // Fail closed - deny permission if there's an error
+    }
+  }, [user, requiredPermission, resourceOwnerId]);
 };
 
 // Higher-order component for conditional rendering based on permissions
 const BlogPermissionGate = ({ permission, resourceOwnerId = null, children, fallback = null }) => {
   const hasPermission = useBlogPermission(permission, resourceOwnerId);
-  
   return hasPermission ? children : fallback;
 };
 
 export { 
-  BLOG_ROLES, 
   hasBlogPermission, 
   getCurrentBlogRole,
   BlogAccessDenied,

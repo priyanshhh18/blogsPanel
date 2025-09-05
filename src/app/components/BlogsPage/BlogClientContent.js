@@ -2,7 +2,7 @@
  
 import { useEffect, useState, useRef } from "react"; // useRef is unused, consider removing
 // Import necessary components used previously in blogs/page.js
-import Breadcrumb from "@components/BlogsPage/Breadcrumb";
+import Breadcrumb from "./Breadcrumb";
 import BlogHero from "./BlogHero";
 import TrendingBlogs from "./trendBlogs";
 import InterviewCard from "./interview";

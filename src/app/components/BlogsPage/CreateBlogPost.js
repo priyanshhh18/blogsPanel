@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 import { AuthContext, useAuth } from '../../context/AuthContext';
 import { Upload, User, Save, Eye, Image as ImageIcon, X, Plus, Hash, Calendar, Camera, Edit } from 'lucide-react';
 
@@ -64,6 +65,39 @@ export default function CreateBlogPost({
   const authContext = useContext(AuthContext);
   const { user } = authContext || {};
 
+  // Fetch blog data for URL-based editing
+  const fetchBlogData = useCallback(async (id) => {
+    try {
+      setIsLoading(true);
+      const token = localStorage.getItem('adminToken') || localStorage.getItem('blogToken');
+
+      const response = await fetch(`${API_BASE}/api/v1/blog/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch blog data');
+      }
+
+      const data = await response.json();
+      if (data.success && data.data) {
+        populateFormData(data.data);
+        if (data.data.image) {
+          setPreviewImage(data.data.image);
+          setExistingImageUrl(data.data.image);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching blog data:', error);
+      setError(error.message || 'Failed to load blog data');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   // Initialize with initialData (for modal mode) or URL params (for standalone mode)
   useEffect(() => {
     if (isModal && initialData && Object.keys(initialData).length > 0) {
@@ -82,7 +116,7 @@ export default function CreateBlogPost({
         fetchBlogData(id);
       }
     }
-  }, [initialData, searchParams, isModal]);
+  }, [initialData, searchParams, isModal, fetchBlogData]);
 
   // Populate form with existing data
   const populateFormData = (blog) => {
@@ -100,44 +134,6 @@ export default function CreateBlogPost({
     if (blog.image) {
       setExistingImageUrl(blog.image);
       setPreviewImage(blog.image);
-    }
-  };
-
-  // Fetch blog data for URL-based editing
-  const fetchBlogData = async (id) => {
-    try {
-      setIsLoading(true);
-      const token = localStorage.getItem('adminToken') || localStorage.getItem('blogToken');
-
-      if (!token) {
-        router.push('/AdminLogin');
-        return;
-      }
-
-      const response = await fetch(`${API_BASE}/api/blogs/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          localStorage.removeItem('adminToken');
-          localStorage.removeItem('blogToken');
-          router.push('/AdminLogin');
-          return;
-        }
-        throw new Error('Failed to fetch blog data');
-      }
-
-      const blog = await response.json();
-      populateFormData(blog);
-    } catch (err) {
-      console.error('Error fetching blog data:', err);
-      setError('Failed to load blog data for editing');
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -581,8 +577,14 @@ export default function CreateBlogPost({
                   >
                     {previewImage ? (
                       <div className="relative w-full">
-                        <div className="aspect-video w-full bg-gray-100 rounded-lg overflow-hidden">
-                          <img src={previewImage} alt="Preview" className="h-full w-full object-cover" />
+                        <div className="relative aspect-video w-full bg-gray-100 rounded-lg overflow-hidden">
+                          <Image
+                            src={previewImage}
+                            alt="Preview"
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          />
                         </div>
                         <button
                           type="button"
@@ -709,9 +711,15 @@ export default function CreateBlogPost({
 
                 <div className="bg-gray-50 rounded-xl p-4 min-h-48 flex flex-col">
                   <div className="w-full rounded-lg overflow-hidden mb-4 bg-gray-100">
-                    <div className="aspect-video w-full">
+                    <div className="relative aspect-video w-full">
                       {previewImage ? (
-                        <img src={previewImage} alt="Blog preview" className="w-full h-full object-cover" />
+                        <Image
+                          src={previewImage}
+                          alt="Blog preview"
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
                           <ImageIcon className="w-20 h-20 text-gray-300" />

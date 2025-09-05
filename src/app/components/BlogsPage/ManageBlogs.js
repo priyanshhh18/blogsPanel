@@ -1,21 +1,34 @@
 import React from "react";
 import Link from "next/link";
-import styles from "@/app/styles/BlogPage/ManageBlogs.module.css";
+import Image from "next/image";
+import styles from "../../styles/BlogPage/ManageBlogs.module.css";
+
+// CHANGED: Access NEXT_PUBLIC_API_URL_BLOG directly
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL_BLOG;
 
 const ManageBlogs = ({ blogs, BASE_URL, handleEdit, handleDelete }) => {
   return (
     <div className={styles.blogsList}>
       {blogs.map((blog) => (
         <div className={styles.blogCard} key={blog._id}>
-          <div className={styles.blogImage}>
+          <div className={styles.imageContainer}>
             <Link href={`/blog/${blog._id}`} className={styles.linkTag}>
-              <img
-                src={
-                  blog.image?.startsWith("http") ? blog.image : `${BASE_URL}${blog.image}`
-                }
-                alt={blog.title}
-                className={styles.blogImage}
-              />
+              <div className={styles.imageWrapper}>
+                <Image
+                  src={
+                    blog.image?.startsWith("http")
+                      ? blog.image
+                      : `${API_BASE_URL}${blog.image}`
+                  }
+                  alt={blog.title}
+                  fill
+                  className={styles.blogImage}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  style={{
+                    objectFit: 'cover',
+                  }}
+                />
+              </div>
             </Link>
           </div>
           <div className={styles.blogContent}>

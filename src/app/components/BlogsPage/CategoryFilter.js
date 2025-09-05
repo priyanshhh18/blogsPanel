@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import styles from "@/app/styles/BlogPage/Components/CategoryFilter.module.css";
+import styles from "../../styles/BlogPage/Components/CategoryFilter.module.css";
 
 const CategoryFilter = ({ categories }) => {
   const router = useRouter();

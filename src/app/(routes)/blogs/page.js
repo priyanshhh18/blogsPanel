@@ -1,28 +1,39 @@
-import { getStaticHtml } from "@/lib/staticHtml";
-import BlogClientContent from '@/components/BlogsPage/BlogClientContent'; // We will create this, or you provide it
- 
+import { getStaticHtml } from '@/app/utils/staticHtml';
+import BlogCard from '@/app/components/BlogsPage/BlogCard';
+import BlogHero from '@/app/components/BlogsPage/BlogHero';
+import BlogClientContent from '@/app/components/BlogsPage/BlogClientContent';
+
 const staticHtml = getStaticHtml('blog');
- 
-// Server Component: Fetches data and defines metadata
- 
+
 export const metadata = {
   title: 'Connecting Dots ERP Blog | SAP, IT & HR Insights',
   description: 'Explore the latest articles, insights, and news from Connecting Dots ERP on SAP, IT training, HR trends, and career development.',
   alternates: {
     canonical: '/blogs',
   },
-  // Add matching Open Graph / Twitter tags here if desired
+  openGraph: {
+    title: 'Connecting Dots ERP Blog',
+    description: 'Latest insights on SAP, IT training, HR trends, and career development',
+    url: 'https://yourdomain.com/blogs',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Connecting Dots ERP Blog',
+    description: 'Latest insights on SAP, IT training, and career development',
+  },
 };
- 
+
 export default async function BlogIndexPage() {
- 
   return (
-    <>
-      {/* Static HTML content for SEO (will be visible in page source) */}
-      {/*<div id="seo-content" dangerouslySetInnerHTML={{ __html: staticHtml }} />
- 
-      {/* Dynamic React Content (rendered on client) */}
-      <BlogClientContent />
-    </>
+    <div className="min-h-screen bg-gray-50">
+      <BlogHero />
+      <main className="container mx-auto px-4 py-8">
+        {/* Static HTML content for SEO (will be visible in page source) */}
+        <div id="seo-content" dangerouslySetInnerHTML={{ __html: staticHtml }} className="hidden" aria-hidden="true" />
+        {/* Dynamic React Content (rendered on client) */}
+        <BlogClientContent />
+      </main>
+    </div>
   );
 }

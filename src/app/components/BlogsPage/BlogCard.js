@@ -2,6 +2,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import styles from "@/app/styles/BlogPage/Components/BlogCard.module.css";
 
 // CHANGED: Access NEXT_PUBLIC_API_URL_BLOG directly
@@ -9,18 +10,27 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL_BLOG;
 
 // REMOVED: BASE_URL from props
 const BlogCard = ({ blog }) => {
+  const imageUrl = blog.image?.startsWith("http") 
+    ? blog.image 
+    : `${API_BASE_URL}${blog.image}`;
+
   return (
     <div className={styles.blogCard}>
-      {/* CHANGED: Use blog.slug for the Link href, with _id fallback */}
       <Link href={`/blogs/${blog.category}/${blog.slug || blog._id}`} className={styles.linkTag}>
         <div className={styles.imageContainer}>
-          <img
-            // CHANGED: Use API_BASE_URL
-            src={blog.image?.startsWith("http") ? blog.image : `${API_BASE_URL}${blog.image}`}
-            alt={blog.title}
-            className={styles.blogImage}
-            loading="lazy"
-          />
+          {imageUrl && (
+            <Image
+              src={imageUrl}
+              alt={blog.title || 'Blog post image'}
+              className={styles.blogImage}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              style={{
+                objectFit: 'cover',
+              }}
+              priority={false}
+            />
+          )}
         </div>
         <div className={styles.overlay}>
           <h3 className={styles.blogTitle}>{blog.title}</h3>

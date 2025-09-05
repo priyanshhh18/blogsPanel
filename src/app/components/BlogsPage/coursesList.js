@@ -15,7 +15,7 @@ const CoursesList = ({ initialCategory = 'all' }) => {
     if (initialCategory && initialCategory !== selectedCategory) {
       setSelectedCategory(initialCategory);
     }
-  }, [initialCategory]);
+  }, [initialCategory, selectedCategory]);
 
   useEffect(() => {
     const checkIfMobile = () => {

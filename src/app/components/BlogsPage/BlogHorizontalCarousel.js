@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import styles from "@/app/styles/BlogPage/Components/BlogHorizontalCarousel.module.css";
+import styles from "../../styles/BlogPage/Components/BlogHorizontalCarousel.module.css";
 
 // CHANGED: Access NEXT_PUBLIC_API_URL_BLOG directly
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL_BLOG;

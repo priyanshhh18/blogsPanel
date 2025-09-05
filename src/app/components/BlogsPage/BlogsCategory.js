@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "@/app/styles/BlogPage/Components/BlogsCategory.module.css";
+import styles from "../../styles/BlogPage/Components/BlogsCategory.module.css";
 
 const BlogsCategory = ({
   selectedCategory,

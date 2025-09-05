@@ -133,7 +133,7 @@ const BlogAdminLayout = ({ children }) => {
     };
 
     checkBlogAccess();
-  }, [user, loading, router]);
+  }, [user, loading, router, isAuthenticated]);
 
   const handleLogout = async () => {
     try {

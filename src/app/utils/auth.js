@@ -440,14 +440,14 @@ const apiUpload = async (endpoint, formData, options = {}) => {
   return response.json();
 };
 
-// Export all utilities
-export {
+// Create authUtils object with all utilities
+const authUtils = {
   fetchWithAuth,
   ensureJsonResponse,
+  handleAuthError,
   validateToken,
   login,
   logout,
-  handleAuthError,
   hasRole,
   getCurrentUser,
   isAuthenticated,
@@ -461,14 +461,14 @@ export {
   API_BASE_URL
 };
 
-// Default export for backward compatibility
-export default {
+// Export all utilities as named exports
+export {
   fetchWithAuth,
   ensureJsonResponse,
+  handleAuthError,
   validateToken,
   login,
   logout,
-  handleAuthError,
   hasRole,
   getCurrentUser,
   isAuthenticated,
@@ -481,3 +481,6 @@ export default {
   apiUpload,
   API_BASE_URL
 };
+
+// Also export as default for backward compatibility
+export default authUtils;

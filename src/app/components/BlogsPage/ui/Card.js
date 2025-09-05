@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Card = ({
   // Content
@@ -53,10 +54,13 @@ const Card = ({
       <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 z-10" />
       {image ? (
         typeof image === 'string' ? (
-          <img
+          <div className="relative w-full h-full">
+          <Image
             src={image}
             alt={title || 'Card image'}
-            className="w-full h-full object-cover transition-all duration-700 group-hover/card:scale-105"
+            fill
+            className="object-cover transition-all duration-700 group-hover/card:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             onError={(e) => {
               if (onImageError) {
                 onImageError(e);
@@ -67,6 +71,7 @@ const Card = ({
               }
             }}
           />
+        </div>
         ) : (
           image
         )

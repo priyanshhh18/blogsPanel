@@ -326,7 +326,7 @@ const UserManagement = () => {
                       value={newUser.username}
                       onChange={handleInputChange}
                       disabled={actionLoading}
-                      className="w-full px-4 lg:px-5 py-3 lg:py-4 border border-gray-300 rounded-lg lg:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 text-sm lg:text-base transition-all duration-200"
+                      className="text-black w-full px-4 lg:px-5 py-3 lg:py-4 border border-gray-300 rounded-lg lg:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 text-sm lg:text-base transition-all duration-200"
                       required
                       placeholder="johndoe"
                       minLength={3}
@@ -342,7 +342,7 @@ const UserManagement = () => {
                       value={newUser.email}
                       onChange={handleInputChange}
                       disabled={actionLoading}
-                      className="w-full px-4 lg:px-5 py-3 lg:py-4 border border-gray-300 rounded-lg lg:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 text-sm lg:text-base transition-all duration-200"
+                      className="text-black w-full px-4 lg:px-5 py-3 lg:py-4 border border-gray-300 rounded-lg lg:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 text-sm lg:text-base transition-all duration-200"
                       placeholder="user@example.com"
                     />
                   </div>
@@ -356,7 +356,7 @@ const UserManagement = () => {
                       value={newUser.role}
                       onChange={handleInputChange}
                       disabled={actionLoading}
-                      className="w-full px-4 lg:px-5 py-3 lg:py-4 border border-gray-300 rounded-lg lg:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 text-sm lg:text-base transition-all duration-200"
+                      className="text-black w-full px-4 lg:px-5 py-3 lg:py-4 border border-gray-300 rounded-lg lg:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 text-sm lg:text-base transition-all duration-200"
                       required
                     >
                       <option value="user">User</option>
@@ -376,7 +376,7 @@ const UserManagement = () => {
                         value={newUser.password}
                         onChange={handleInputChange}
                         disabled={actionLoading}
-                        className="w-full px-4 lg:px-5 py-3 lg:py-4 border border-gray-300 rounded-lg lg:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 text-sm lg:text-base transition-all duration-200"
+                        className="text-black w-full px-4 lg:px-5 py-3 lg:py-4 border border-gray-300 rounded-lg lg:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 text-sm lg:text-base transition-all duration-200"
                         required
                         minLength={6}
                         placeholder="Minimum 6 characters"
@@ -393,7 +393,7 @@ const UserManagement = () => {
                         value={newUser.confirmPassword}
                         onChange={handleInputChange}
                         disabled={actionLoading}
-                        className="w-full px-4 lg:px-5 py-3 lg:py-4 border border-gray-300 rounded-lg lg:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 text-sm lg:text-base transition-all duration-200"
+                        className="text-black w-full px-4 lg:px-5 py-3 lg:py-4 border border-gray-300 rounded-lg lg:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 text-sm lg:text-base transition-all duration-200"
                         required
                         minLength={6}
                         placeholder="Confirm password"
@@ -462,7 +462,7 @@ const UserManagement = () => {
                           value={editUser.username}
                           onChange={handleEditChange}
                           disabled={actionLoading}
-                          className="w-full px-4 lg:px-5 py-3 lg:py-4 border border-gray-300 rounded-lg lg:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 text-sm lg:text-base transition-all duration-200"
+                          className="text-black w-full px-4 lg:px-5 py-3 lg:py-4 border border-gray-300 rounded-lg lg:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 text-sm lg:text-base transition-all duration-200"
                           minLength={3}
                           maxLength={30}
                           placeholder="Enter username"
@@ -476,7 +476,7 @@ const UserManagement = () => {
                           value={editUser.role}
                           onChange={handleEditChange}
                           disabled={actionLoading}
-                          className="w-full px-4 lg:px-5 py-3 lg:py-4 border border-gray-300 rounded-lg lg:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 text-sm lg:text-base transition-all duration-200"
+                          className="text-black w-full px-4 lg:px-5 py-3 lg:py-4 border border-gray-300 rounded-lg lg:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 text-sm lg:text-base transition-all duration-200"
                         >
                           <option value="user">User</option>
                           <option value="admin">Admin</option>

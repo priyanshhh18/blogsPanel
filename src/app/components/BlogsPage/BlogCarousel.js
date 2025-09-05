@@ -3,7 +3,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import styles from "@/app/styles/BlogPage/Components/BlogCarousel.module.css";
+import Image from "next/image";
+import styles from "../../styles/BlogPage/Components/BlogCarousel.module.css";
 
 // CHANGED: Access NEXT_PUBLIC_API_URL_BLOG directly
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL_BLOG;
@@ -134,17 +135,23 @@ const BlogCarousel = ({ blogs, title }) => {
               <Link href={`/blogs/${blog.category}/${blog.slug || blog._id}`} className={styles.linkTag}>
                 <div className={styles.blogCard}>
                   <div className={styles.imageContainer}>
-                    <img
-                      // CHANGED: Use API_BASE_URL
-                      src={
-                        blog.image?.startsWith("http")
-                          ? blog.image
-                          : `${API_BASE_URL}${blog.image}`
-                      }
-                      alt={blog.title}
-                      className={styles.blogImage}
-                      loading="lazy"
-                    />
+                    <div className={styles.imageWrapper}>
+                      <Image
+                        src={
+                          blog.image?.startsWith("http")
+                            ? blog.image
+                            : `${API_BASE_URL}${blog.image}`
+                        }
+                        alt={blog.title}
+                        className={styles.blogImage}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        style={{
+                          objectFit: 'cover',
+                        }}
+                        loading="lazy"
+                      />
+                    </div>
                     <div className={styles.statusBadge}>{blog.status}</div>
                   </div>
                   <div className={styles.overlay}>
